@@ -4,6 +4,7 @@ import {
   createServerClient,
   isBrowser,
 } from "@supabase/ssr";
+import "../styles.css";
 
 import {
   PUBLIC_SUPABASE_URL,
