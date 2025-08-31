@@ -43,5 +43,11 @@
 	},
 	"keywords": [
 		"svelte"
-	]
+	],
+	"dependencies": {
+		"@supabase/ssr": "^0.7.0",
+		"@supabase/supabase-js": "^2.56.1",
+		"dotenv": "^17.2.1",
+		"supabase": "^2.39.2"
+	}
 }
