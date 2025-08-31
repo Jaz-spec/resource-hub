@@ -2,14 +2,16 @@ import { type Handle, redirect } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 import { createServerClient } from "@supabase/ssr";
 
-import dotenv from "dotenv";
-dotenv.config();
+import {
+  PUBLIC_SUPABASE_URL,
+  PUBLIC_SUPABASE_ANON_KEY,
+} from "$env/static/public";
 
 const supabase: Handle = async ({ event, resolve }) => {
   //The Supabase client gets the Auth token from the request cookies.
 
-  const supabaseUrl = process.env.PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.PUBLIC_SUPABASE_ANON_KEY;
+  const supabaseUrl = PUBLIC_SUPABASE_URL;
+  const supabaseKey = PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
     throw new Error("Missing Supabase environment variables");

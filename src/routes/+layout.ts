@@ -4,14 +4,17 @@ import {
   createServerClient,
   isBrowser,
 } from "@supabase/ssr";
-import dotenv from "dotenv";
-dotenv.config();
+
+import {
+  PUBLIC_SUPABASE_URL,
+  PUBLIC_SUPABASE_ANON_KEY,
+} from "$env/static/public";
 
 export const load: LayoutLoad = async ({ fetch, data, depends }) => {
   depends("supabase:auth");
 
-  const supabaseUrl = process.env.PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.PUBLIC_SUPABASE_ANON_KEY;
+  const supabaseUrl = PUBLIC_SUPABASE_URL;
+  const supabaseKey = PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
     throw new Error("missing environmental variables - public supabase keys");
@@ -38,3 +41,5 @@ export const load: LayoutLoad = async ({ fetch, data, depends }) => {
 
   return { supabase, session };
 };
+
+//make it server side
