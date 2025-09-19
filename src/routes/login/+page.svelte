@@ -42,16 +42,14 @@
     }
 </script>
 
-<div class="container">
+<div class="container dev">
     <nav>
-        <a href="/">Home</a>
+        <a href="/" class="dev">Home</a>
     </nav>
 
-    <main>
-        <h1>Login</h1>
-
+    <main class="dev">
         <form on:submit|preventDefault={handleSubmit} class="login-form">
-            <div class="form-group">
+            <div class="dev">
                 <label for="name">Name:</label>
                 <input
                     id="name"
@@ -59,13 +57,14 @@
                     bind:value={name}
                     placeholder="Enter your name"
                     disabled={isSubmitting}
+                    class="dev"
                 />
                 {#if errors.name}
                     <span class="error-message">{errors.name}</span>
                 {/if}
             </div>
 
-            <div class="form-group">
+            <div class="dev">
                 <label for="password">Password:</label>
                 <input
                     id="password"
@@ -74,13 +73,14 @@
                     placeholder="Enter your password"
                     class:error={errors.password}
                     disabled={isSubmitting}
+                    class="dev"
                 />
                 {#if errors.password}
                     <span class="error-message">{errors.password}</span>
                 {/if}
             </div>
 
-            <button type="submit" disabled={isSubmitting}>
+            <button class="dev" type="submit" disabled={isSubmitting}>
                 {isSubmitting ? "Logging in..." : "Login"}
             </button>
         </form>
