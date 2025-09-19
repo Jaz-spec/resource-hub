@@ -53,7 +53,7 @@
     </nav>
 
     <main class:dev={state === "dev"}>
-        <form on:submit|preventDefault={handleSubmit} class="login-form">
+        <form onsubmit={handleSubmit} class="login-form">
             <div class:dev={state === "dev"}>
                 <label for="name">Name:</label>
                 <input
