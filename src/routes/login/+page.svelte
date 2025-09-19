@@ -1,4 +1,9 @@
 <script lang="ts">
+    import { getContext } from "svelte";
+
+    let getState = getContext("state");
+    let state = $derived(getState());
+
     let name = "";
     let password = "";
     let errors: Errors = {};
@@ -42,14 +47,14 @@
     }
 </script>
 
-<div class="container dev">
+<div class="container" class:dev={state === "dev"}>
     <nav>
-        <a href="/" class="dev">Home</a>
+        <a href="/" class:dev={state === "dev"}>Home</a>
     </nav>
 
-    <main class="dev">
+    <main class:dev={state === "dev"}>
         <form on:submit|preventDefault={handleSubmit} class="login-form">
-            <div class="dev">
+            <div class:dev={state === "dev"}>
                 <label for="name">Name:</label>
                 <input
                     id="name"
@@ -57,14 +62,14 @@
                     bind:value={name}
                     placeholder="Enter your name"
                     disabled={isSubmitting}
-                    class="dev"
+                    class:dev={state === "dev"}
                 />
                 {#if errors.name}
                     <span class="error-message">{errors.name}</span>
                 {/if}
             </div>
 
-            <div class="dev">
+            <div class:dev={state === "dev"}>
                 <label for="password">Password:</label>
                 <input
                     id="password"
@@ -73,14 +78,18 @@
                     placeholder="Enter your password"
                     class:error={errors.password}
                     disabled={isSubmitting}
-                    class="dev"
+                    class:dev={state === "dev"}
                 />
                 {#if errors.password}
                     <span class="error-message">{errors.password}</span>
                 {/if}
             </div>
 
-            <button class="dev" type="submit" disabled={isSubmitting}>
+            <button
+                class:dev={state === "dev"}
+                type="submit"
+                disabled={isSubmitting}
+            >
                 {isSubmitting ? "Logging in..." : "Login"}
             </button>
         </form>

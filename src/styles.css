@@ -2,7 +2,7 @@
 @plugin "daisyui";
 
 .dev {
-    border: 2px solid darkmagenta;
+    border: 3px solid darkmagenta;
     padding: 1em 2em;
     margin: 30px;
 }
