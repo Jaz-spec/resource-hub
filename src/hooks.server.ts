@@ -16,9 +16,9 @@ const supabase: Handle = async ({ event, resolve }) => {
   if (!supabaseUrl || !supabaseKey) {
     throw new Error("Missing Supabase environment variables");
   } else {
-    //create client
+    //creates client
     event.locals.supabase = createServerClient(supabaseUrl, supabaseKey, {
-      //set cookies
+      //sets cookies
       cookies: {
         getAll: () => event.cookies.getAll(),
         setAll: (cookiesToSet) => {

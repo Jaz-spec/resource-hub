@@ -1,31 +1,48 @@
 <script lang="ts">
-    import { setContext } from "svelte";
+    import { setContext, onMount } from "svelte";
+    import { invalidate } from "$app/navigation";
 
-    let { children } = $props();
-
+    let { data, children } = $props();
+    let { session, supabase } = $derived(data);
     let state = $state("dev");
+
     setContext("state", () => state);
+
+    onMount(() => {
+        const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
+            if (newSession?.expires_at !== session?.expires_at) {
+                invalidate("supabase:auth");
+            }
+        });
+        return () => data.subscription.unsubscribe();
+    });
 </script>
 
-<header>
-    <button
-        class:dev={state === "dev"}
-        onclick={() => {
-            bind: state = "dev";
-        }}>DEV</button
-    >
-    <button
-        class:dev={state === "dev"}
-        onclick={() => {
-            bind: state = "admin";
-        }}>ADMIN</button
-    >
-    <button
-        class:dev={state === "dev"}
-        onclick={() => {
-            bind: state = "user";
-        }}>USER</button
-    >
+<header class="nav">
+    <a href="/" class:dev={state === "dev"}>Home</a>
+    <a href="/auth" class:dev={state === "dev"}>Sign Up</a>
+    <a href="/login" class:dev={state === "dev"}>Login</a>
+
+    <div>
+        <button
+            class:dev={state === "dev"}
+            onclick={() => {
+                bind: state = "dev";
+            }}>DEV</button
+        >
+        <button
+            class:dev={state === "dev"}
+            onclick={() => {
+                bind: state = "admin";
+            }}>ADMIN</button
+        >
+        <button
+            class:dev={state === "dev"}
+            onclick={() => {
+                bind: state = "user";
+            }}>USER</button
+        >
+    </div>
 </header>
 <main class:dev={state === "dev"}>
     {@render children()}
