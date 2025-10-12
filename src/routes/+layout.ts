@@ -42,5 +42,3 @@ export const load: LayoutLoad = async ({ fetch, data, depends }) => {
 
   return { supabase, session };
 };
-
-//make it server side

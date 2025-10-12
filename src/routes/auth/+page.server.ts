@@ -18,8 +18,8 @@ export const actions: Actions = {
         options: {
           data: {
             name: name,
-          }
-        }
+          },
+        },
       });
       if (error) {
         console.error("Supabase error:", error);
@@ -48,5 +48,15 @@ export const actions: Actions = {
     } else {
       redirect(303, "/private");
     }
+  },
+  logout: async ({ locals: { supabase } }) => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error(error);
+      redirect(303, "/auth/error");
+    }
+    console.log("Logout successful");
+    redirect(303, "/");
   },
 };
