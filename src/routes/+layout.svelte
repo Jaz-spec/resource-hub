@@ -16,15 +16,20 @@
         });
         return () => data.subscription.unsubscribe();
     });
+    console.log("===========DATA============");
+    $inspect(data);
 </script>
 
 <header class="nav">
     <a href="/" class:dev={state === "dev"}>Home</a>
-    <a href="/auth" class:dev={state === "dev"}>Sign Up</a>
-    <a href="/login" class:dev={state === "dev"}>Login</a>
-    <form method="POST" action="?/logout">
-        <button type="submit" class:dev={state === "dev"}>Logout</button>
-    </form>
+    {#if data.session}
+        <form method="POST" action="?/logout">
+            <button type="submit" class:dev={state === "dev"}>Logout</button>
+        </form>
+    {:else}
+        <a href="/auth" class:dev={state === "dev"}>Sign Up</a>
+        <a href="/login" class:dev={state === "dev"}>Login</a>
+    {/if}
 
     <div>
         <button
