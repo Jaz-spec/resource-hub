@@ -16,8 +16,6 @@
         });
         return () => data.subscription.unsubscribe();
     });
-    console.log("===========DATA============");
-    $inspect(data);
 </script>
 
 <header class="nav">
