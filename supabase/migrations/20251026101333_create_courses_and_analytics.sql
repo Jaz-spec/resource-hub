@@ -165,11 +165,14 @@ begin
         view_ended_at = now(),
         duration_seconds = coalesce(p_duration_seconds, extract(epoch from (now() - view_started_at))::integer),
         completion_percentage = p_completion_percentage
-    where session_id = p_session_id
-    and resource_id = p_resource_id
-    and view_ended_at is null
-    order by view_started_at desc
-    limit 1;
+    where id = (
+        select id from public.resource_analytics
+        where session_id = p_session_id
+        and resource_id = p_resource_id
+        and view_ended_at is null
+        order by view_started_at desc
+        limit 1
+    );
 end;
 $$ language plpgsql security definer;
 

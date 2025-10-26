@@ -63,11 +63,11 @@ create table public.resource_files (
     display_order integer default 0, -- for ordering multiple files of same type
     is_primary boolean default false, -- mark primary version if multiple
     uploaded_at timestamp with time zone default now(),
-    uploaded_by uuid not null references public.profiles(id) on delete restrict,
-
-    -- Ensure one primary file per type per resource
-    unique(resource_id, file_type, is_primary) where is_primary = true
+    uploaded_by uuid not null references public.profiles(id) on delete restrict
 );
+
+-- Ensure one primary file per type per resource
+create unique index resource_files_one_primary_per_type_per_resource_idx on public.resource_files(resource_id, file_type) where is_primary = true;
 
 -- Create resource links table for external URLs
 create table public.resource_links (
@@ -99,9 +99,11 @@ create table public.resource_categories (
     assigned_by uuid references public.profiles(id) on delete set null,
 
     -- Ensure unique combination and only one primary per resource
-    unique(resource_id, category_id),
-    unique(resource_id, is_primary) where is_primary = true
+    unique(resource_id, category_id)
 );
+
+-- Ensure only one primary per resource
+create unique index resource_categories_one_primary_per_resource_idx on public.resource_categories(resource_id) where is_primary = true;
 
 -- Create indexes for better query performance
 create index idx_resources_created_at on public.resources(created_at desc);

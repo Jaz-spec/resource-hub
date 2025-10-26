@@ -3,6 +3,16 @@
 
 -- Create a comprehensive resource view with all related data
 create or replace view public.resources_full as
+with labels_by_resource as (
+    select
+        rl_map.resource_id,
+        lt.name as label_type_name,
+        array_agg(distinct l.name) as label_names
+    from public.resource_labels rl_map
+    join public.labels l on rl_map.label_id = l.id
+    join public.label_types lt on l.label_type_id = lt.id
+    group by rl_map.resource_id, lt.name
+)
 select
     r.*,
     -- Creator info
@@ -17,10 +27,7 @@ select
     pc.name as primary_category_name,
 
     -- Labels grouped by type
-    jsonb_object_agg(
-        lt.name,
-        array_agg(distinct l.name)
-    ) filter (where l.id is not null) as labels_by_type,
+    lbr.labels_by_type,
 
     -- File counts
     count(distinct rf.id) as file_count,
@@ -42,15 +49,19 @@ left join public.profiles p on r.created_by = p.id
 left join public.resource_categories rc on r.id = rc.resource_id
 left join public.categories c on rc.category_id = c.id
 left join public.categories pc on rc.category_id = pc.id and rc.is_primary = true
-left join public.resource_labels rl_map on r.id = rl_map.resource_id
-left join public.labels l on rl_map.label_id = l.id
-left join public.label_types lt on l.label_type_id = lt.id
+left join (
+    select
+        resource_id,
+        jsonb_object_agg(label_type_name, label_names) as labels_by_type
+    from labels_by_resource
+    group by resource_id
+) lbr on r.id = lbr.resource_id
 left join public.resource_files rf on r.id = rf.resource_id
 left join public.resource_links rl on r.id = rl.resource_id
 left join public.resource_analytics_summary ras on r.id = ras.resource_id
 left join public.course_resources cr on r.id = cr.resource_id
 where r.deleted_at is null
-group by r.id, p.name, p.email, pc.name, ras.total_views, ras.total_unique_views, ras.last_viewed_at;
+group by r.id, p.name, p.email, pc.name, lbr.labels_by_type, ras.total_views, ras.total_unique_views, ras.last_viewed_at;
 
 -- Create a course view with resource count and metadata
 create or replace view public.courses_full as
@@ -344,9 +355,10 @@ grant execute on function public.update_resource_categories to authenticated;
 grant execute on function public.update_resource_labels to authenticated;
 grant execute on function public.get_admin_stats to authenticated;
 
+-- Note: The trigram indexes above require the pg_trgm extension
+-- Enable it with: create extension if not exists pg_trgm;
+create extension if not exists pg_trgm;
+
 -- Create indexes for search performance
 create index if not exists idx_resources_title_trgm on public.resources using gin (title gin_trgm_ops);
 create index if not exists idx_resources_description_trgm on public.resources using gin (description gin_trgm_ops);
-
--- Note: The trigram indexes above require the pg_trgm extension
--- Enable it with: create extension if not exists pg_trgm;
