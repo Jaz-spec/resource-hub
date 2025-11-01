@@ -12,12 +12,14 @@ export const actions: Actions = {
       console.log("Email:", email, "Password length:", password?.length);
 
       const name = formData.get("name") as string;
+      const role = formData.get("role") as string;
       const { error } = await supabase.auth.signUp({
         email: email,
         password: password,
         options: {
           data: {
             name: name,
+            role: role,
           },
         },
       });

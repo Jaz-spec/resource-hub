@@ -7,6 +7,7 @@
     let state = $derived(getState());
 
     let name = $state("");
+    let role = $state("");
     let email = $state("");
     let password = $state("");
     let errors: Errors = {};
@@ -14,6 +15,7 @@
 
     interface Errors {
         name?: string;
+        role?: "admin" | "user" | "dev";
         password?: string;
         email?: string;
     }
@@ -31,6 +33,22 @@
                     name="name"
                     bind:value={name}
                     placeholder="Enter your name"
+                    disabled={isSubmitting}
+                    class:dev={state === "dev"}
+                />
+                {#if errors.name}
+                    <span class="error-message">{errors.name}</span>
+                {/if}
+            </div>
+
+            <div class:dev={state === "dev"}>
+                <label for="role">Role:</label>
+                <input
+                    id="role"
+                    type="text"
+                    name="role"
+                    bind:value={role}
+                    placeholder="Enter your role"
                     disabled={isSubmitting}
                     class:dev={state === "dev"}
                 />

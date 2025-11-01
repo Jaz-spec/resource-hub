@@ -7,6 +7,8 @@ create table public.profiles (
     email text,
     name text,
     role text check (role in('dev', 'admin', 'user')),
+    created_at timestamptz default now(),
+    updated_at timestamptz default now(),
 
     primary key (id)
 );
