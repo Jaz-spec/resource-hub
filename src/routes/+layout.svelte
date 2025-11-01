@@ -1,12 +1,11 @@
 <script lang="ts">
-    import { setContext, onMount } from "svelte";
+    import { onMount } from "svelte";
     import { invalidate } from "$app/navigation";
+
+    import NavBar from "$lib/NavBar.svelte";
 
     let { data, children } = $props();
     let { session, supabase } = $derived(data);
-    let state = $state("dev");
-
-    setContext("state", () => state);
 
     onMount(() => {
         const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
@@ -18,41 +17,10 @@
     });
 </script>
 
-<header class="nav">
-    <a href="/" class:dev={state === "dev"}>Home</a>
-    {#if data.session}
-        <form method="POST" action="?/logout">
-            <button type="submit" class:dev={state === "dev"}>Logout</button>
-        </form>
-    {:else}
-        <a href="/auth" class:dev={state === "dev"}>Sign Up</a>
-        <a href="/login" class:dev={state === "dev"}>Login</a>
-    {/if}
-
-    <div>
-        <button
-            class:dev={state === "dev"}
-            onclick={() => {
-                bind: state = "dev";
-            }}>DEV</button
-        >
-        <button
-            class:dev={state === "dev"}
-            onclick={() => {
-                bind: state = "admin";
-            }}>ADMIN</button
-        >
-        <button
-            class:dev={state === "dev"}
-            onclick={() => {
-                bind: state = "user";
-            }}>USER</button
-        >
-    </div>
-</header>
-<main class:dev={state === "dev"}>
+<NavBar {data} />
+<main class="dev">
     {@render children()}
 </main>
-<footer class:dev={state === "dev"}>
+<footer class="dev">
     <p>Footer</p>
 </footer>

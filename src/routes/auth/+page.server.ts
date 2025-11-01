@@ -34,23 +34,23 @@ export const actions: Actions = {
       console.error("Action error:", err);
     }
   },
-  login: async ({ request, locals: { supabase } }) => {
-    console.log("=== Calling Login ===");
-    const formData = await request.formData();
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+  // login: async ({ request, locals: { supabase } }) => {
+  //   console.log("=== Calling Login ===");
+  //   const formData = await request.formData();
+  //   const email = formData.get("email") as string;
+  //   const password = formData.get("password") as string;
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) {
-      console.error(error);
-      redirect(303, "/auth/error");
-    } else {
-      redirect(303, "/private");
-    }
-  },
+  //   const { error } = await supabase.auth.signInWithPassword({
+  //     email,
+  //     password,
+  //   });
+  //   if (error) {
+  //     console.error(error);
+  //     redirect(303, "/auth/error");
+  //   } else {
+  //     redirect(303, "/private");
+  //   }
+  // },
   logout: async ({ locals: { supabase } }) => {
     const { error } = await supabase.auth.signOut();
 

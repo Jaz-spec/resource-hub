@@ -1,10 +1,7 @@
 <script lang="ts">
-    import { getContext } from "svelte";
     import { enhance } from "$app/forms";
 
-    // TODO: typecheck
-    let getState: any = getContext("state");
-    let state = $derived(getState());
+    const { action } = $props();
 
     let name = $state("");
     let role = $state("");
@@ -19,45 +16,46 @@
         password?: string;
         email?: string;
     }
-    const { action } = $props();
 </script>
 
-<div class="container" class:dev={state === "dev"}>
-    <main class:dev={state === "dev"}>
+<div class="container dev">
+    <main class="dev">
         <form method="POST" {action} class="login-form" use:enhance>
-            <div class:dev={state === "dev"}>
-                <label for="name">Name:</label>
-                <input
-                    id="name"
-                    type="text"
-                    name="name"
-                    bind:value={name}
-                    placeholder="Enter your name"
-                    disabled={isSubmitting}
-                    class:dev={state === "dev"}
-                />
-                {#if errors.name}
-                    <span class="error-message">{errors.name}</span>
-                {/if}
-            </div>
+            {#if action === "?/signup"}
+                <div class="dev">
+                    <label for="name">Name:</label>
+                    <input
+                        id="name"
+                        type="text"
+                        name="name"
+                        bind:value={name}
+                        placeholder="Enter your name"
+                        disabled={isSubmitting}
+                        class="dev"
+                    />
+                    {#if errors.name}
+                        <span class="error-message">{errors.name}</span>
+                    {/if}
+                </div>
 
-            <div class:dev={state === "dev"}>
-                <label for="role">Role:</label>
-                <input
-                    id="role"
-                    type="text"
-                    name="role"
-                    bind:value={role}
-                    placeholder="Enter your role"
-                    disabled={isSubmitting}
-                    class:dev={state === "dev"}
-                />
-                {#if errors.name}
-                    <span class="error-message">{errors.name}</span>
-                {/if}
-            </div>
+                <div class="dev">
+                    <label for="role">Role:</label>
+                    <input
+                        id="role"
+                        type="text"
+                        name="role"
+                        bind:value={role}
+                        placeholder="Enter your role"
+                        disabled={isSubmitting}
+                        class="dev"
+                    />
+                    {#if errors.name}
+                        <span class="error-message">{errors.name}</span>
+                    {/if}
+                </div>
+            {/if}
 
-            <div class:dev={state === "dev"}>
+            <div class="dev">
                 <label for="email">Email:</label>
                 <input
                     id="email"
@@ -66,14 +64,14 @@
                     bind:value={email}
                     placeholder="Enter your name"
                     disabled={isSubmitting}
-                    class:dev={state === "dev"}
+                    class="dev"
                 />
                 {#if errors.email}
                     <span class="error-message">{errors.email}</span>
                 {/if}
             </div>
 
-            <div class:dev={state === "dev"}>
+            <div class="dev">
                 <label for="password">Password:</label>
                 <input
                     id="password"
@@ -83,19 +81,19 @@
                     placeholder="Enter your password"
                     class:error={errors.password}
                     disabled={isSubmitting}
-                    class:dev={state === "dev"}
+                    class="dev"
                 />
                 {#if errors.password}
                     <span class="error-message">{errors.password}</span>
                 {/if}
             </div>
 
-            <button
-                class:dev={state === "dev"}
-                type="submit"
-                disabled={isSubmitting}
-            >
-                {isSubmitting ? "Creating user..." : "Sign Up"}
+            <button class="dev" type="submit" disabled={isSubmitting}>
+                {#if action === "?/signup"}
+                    {isSubmitting ? "Creating user..." : "Sign Up"}
+                {:else}
+                    {isSubmitting ? "Logging in..." : "Log in"}
+                {/if}
             </button>
         </form>
     </main>
